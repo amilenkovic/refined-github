@@ -47,12 +47,13 @@ import addMilestoneNavigation from './features/add-milestone-navigation';
 import addFilterCommentsByYou from './features/add-filter-comments-by-you';
 import removeProjectsTab from './features/remove-projects-tab';
 import fixSquashAndMergeTitle from './features/fix-squash-and-merge-title';
+import fixSquashAndMergeMessage from './features/fix-squash-and-merge-message';
 import addTitleToEmojis from './features/add-title-to-emojis';
 import sortMilestonesByClosestDueDate from './features/sort-milestones-by-closest-due-date';
-import moveAccountSwitcherToSidebar from './features/move-account-switcher-to-sidebar';
 import openCIDetailsInNewTab from './features/open-ci-details-in-new-tab';
 import focusConfirmationButtons from './features/focus-confirmation-buttons';
 import addKeyboardShortcutsToCommentFields from './features/add-keyboard-shortcuts-to-comment-fields';
+import addCreateReleaseShortcut from './features/add-create-release-shortcut';
 import addConfirmationToCommentCancellation from './features/add-confirmation-to-comment-cancellation';
 import addCILink from './features/add-ci-link';
 import embedGistInline from './features/embed-gist-inline';
@@ -69,10 +70,11 @@ import waitForBuild from './features/wait-for-build';
 import addDownloadFolderButton from './features/add-download-folder-button';
 import hideUselessNewsfeedEvents from './features/hide-useless-newsfeed-events';
 import closeOutOfViewModals from './features/close-out-of-view-modals';
-import addScopedSearchOnUserProfile from './features/add-scoped-search-on-user-profile';
 import monospaceTextareas from './features/monospace-textareas';
 import improveShortcutHelp from './features/improve-shortcut-help';
+import hideNavigationHoverHighlight from './features/hide-navigation-hover-highlight';
 import displayIssueSuggestions from './features/display-issue-suggestions';
+import addPullRequestHotkey from './features/add-pull-request-hotkey';
 import openSelectionInNewTab from './features/add-selection-in-new-tab';
 
 import * as pageDetect from './libs/page-detect';
@@ -108,7 +110,6 @@ async function init() {
 	}
 
 	if (pageDetect.isDashboard()) {
-		enableFeature(moveAccountSwitcherToSidebar);
 		enableFeature(hideUselessNewsfeedEvents);
 	}
 
@@ -122,13 +123,10 @@ async function init() {
 		});
 	}
 
-	if (pageDetect.isUserProfile()) {
-		enableFeature(addScopedSearchOnUserProfile);
-	}
-
 	enableFeature(focusConfirmationButtons);
 	enableFeature(addKeyboardShortcutsToCommentFields);
 	enableFeature(addConfirmationToCommentCancellation);
+	enableFeature(hideNavigationHoverHighlight);
 	enableFeature(monospaceTextareas);
 	enableFeature(openSelectionInNewTab);
 
@@ -219,10 +217,12 @@ function ajaxedPagesHandler() {
 		enableFeature(scrollToTopOnCollapse);
 		enableFeature(addDeleteForkLink);
 		enableFeature(fixSquashAndMergeTitle);
+		enableFeature(fixSquashAndMergeMessage);
 		enableFeature(openCIDetailsInNewTab);
 		enableFeature(waitForBuild);
 		enableFeature(toggleAllThingsWithAlt);
 		enableFeature(hideInactiveDeployments);
+		enableFeature(addPullRequestHotkey);
 	}
 
 	if (pageDetect.isPR() || pageDetect.isIssue()) {
@@ -251,6 +251,10 @@ function ajaxedPagesHandler() {
 
 	if (pageDetect.isIssueList() || pageDetect.isPR() || pageDetect.isIssue()) {
 		enableFeature(showRecentlyPushedBranches);
+	}
+
+	if (pageDetect.isReleasesOrTags()) {
+		enableFeature(addCreateReleaseShortcut);
 	}
 
 	if (pageDetect.isCommit()) {
